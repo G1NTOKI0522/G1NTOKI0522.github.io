@@ -238,6 +238,137 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://g1ntoki0522.github.io/2018/03/19/Know-My-Weapon/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="G1NTOKI">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/sidebarAvatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="G1NTOKI">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/03/19/Know-My-Weapon/" itemprop="url">Know My Weapon</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-19T17:20:58+08:00">
+                2018-03-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>简述体验所有control后，结合以前使用Qt和JAVA设计界面的经历，对其中5个control的思考。</p>
+<h2 id="Acrylic"><a href="#Acrylic" class="headerlink" title="Acrylic"></a>Acrylic</h2><h3 id="效果实现"><a href="#效果实现" class="headerlink" title="效果实现"></a>效果实现</h3><p>亚克力玻璃效果被越来越多的应用到了Windows应用的设计中。这种半透明的设计使应用有了简洁大方的优雅。刚好昨天在调blog的正文背景用到了半透明（其实就是调整背景颜色的透明度），对比发现Acrylic的实现不是简单的调整Tint color 的透明度，而是加了模糊效果才做到的。</p>
+<h3 id="营造景深"><a href="#营造景深" class="headerlink" title="营造景深"></a>营造景深</h3><p><img src="/images/Uvp01.gif" alt="Acrylic"><br>比起简单的透视背景，我觉得Acrylic更有趣的应用在于和ScalarAnimation的结合来营造出内容向后缩退的感觉，如上动图。这样能为扁平化设计增添景深和动感，使交互灵动活泼。</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p><img src="/images/acrylic.png" alt="window"><br>但是Acrylic中还有一个量即Fallback color，使窗口在非激活状态显示这个颜色，如上图XAML Control这个应用在非激活时左侧导航栏背景显示为白色。这个设计让人感觉比较鸡肋，不能体会其存在的必要性。反而会导致一些问题。比如Win自带的Calculator在最大化时会闪一下。</p>
+<h2 id="Calendar"><a href="#Calendar" class="headerlink" title="Calendar"></a>Calendar</h2><p><img src="/images/CalendarDatePicker00.png" alt="calendar"></p>
+<h3 id="设计缺点"><a href="#设计缺点" class="headerlink" title="设计缺点"></a>设计缺点</h3><p>年份月份的显示方式完全不能表明它其实可以被单击后修改年月，这是我随便点到才发现的功能。其次界面称得上简陋，没有我们惯用的将农历小字标注和节日节气标注。</p>
+<h3 id="显示bug"><a href="#显示bug" class="headerlink" title="显示bug"></a>显示bug</h3><p>如上图显示，在选择年份时下边几个年份是不能选择的，所以做了灰色的阴影来表示，这个方法是没问题的，但是，这个控件只能使用滚轮向上逐行滚动，滚动速度是比较快的，就导致新的界面的下两行仍然有灰色阴影。猜测可能是因为追求速度，没有将每个格子重绘只是修改了显示的数字。在选择月份和日期时有同样的问题。建议将选择日期时的方式由逐行滚动变为换页，左翻一页，一页显示一个月的日期。</p>
+<h2 id="Password-Box"><a href="#Password-Box" class="headerlink" title="Password Box"></a>Password Box</h2><p>密码框使用起来感觉还不错，可以在代码中设置Headler,PlaceHolderText,PasswordChar等，但有一个细节令人感觉有些不方便。如下图所示，在输入密码之后鼠标长按“眼睛”状图标即可查看输入的密码，松开后再次长按即可再次查看密码如左图所示。但是如果此时鼠标在其他任意地方单击了一次之后，这个眼睛的图标就消失了，再也不能查看已经输入的密码如下图所示。<br><img src="/images/PasswordBox01.png" alt="Password"><br>这样设计可能是为了安全考虑，但是有谁会长时间停留在输入密码的界面呢。我想大多数应用场景都是，用户手脚麻利的输入用户名和密码，然后一发自信提交，坐待登陆。当密码输入错误时才会去查看密码进行修改。偏偏此时已经不能查看，只能重新输入。<br><img src="/images/PasswordBox02.png" alt="Password-inviseble"></p>
+<h2 id="RichEdit-Box"><a href="#RichEdit-Box" class="headerlink" title="RichEdit Box"></a>RichEdit Box</h2><p><img src="/images/RichEditBox.png" alt="RichEditBox"><br>这个富文本编辑器控件是麻雀虽小，五脏俱全。支持打开文件、保存文件，字体调整、文本搜索，且文本搜索对大小写不敏感。</p>
+<h3 id="设计费解"><a href="#设计费解" class="headerlink" title="设计费解"></a>设计费解</h3><p>字体调整中支持粗体、斜体和，等等这个大写A下加一线竟然是修改字体颜色的？？？下划线呢？？？<br>其次，对字体选择加粗、斜体等效果后按钮毫无变化，没有被选中的显示。建议使用ToggleButton的效果直截了当的显示当前已经选中的效果如下图。<br><img src="/images/ToggleButton.png" alt="ToggleButto"></p>
+<h2 id="Combo-Box"><a href="#Combo-Box" class="headerlink" title="Combo Box"></a>Combo Box</h2><p><img src="/images/ComboBox.png" alt="ComboBox"><br>为了对比Java中的ComboBox，动手在VS中实践了一下ComboBox。相比而言，这个控件的使用更简单易用。添加ComboBoxItem也只要描述清楚Item的content等就好，在JAVA中则还要考虑监听等。但是控件细节还需要完善。比如向下拉菜单中的每一项添加图片或icon图标，应用场景是绘图板中通过下拉菜单选择线型，我希望的是菜单中每一项直接是直线或虚线的图标，便于选择效果也更加直观。去年在用JAVA写画图板的大作业中实现了这个功能，走了一些弯路，因为Item直接加icon图标是不显示的，需要给每个选项添加渲染器，同时监听。而在这里，我查阅了<a href="https://docs.microsoft.com/en-us/uwp/api/Windows.UI.Xaml.Controls.ComboBox" target="_blank" rel="external">微软官方文档</a>但其中并没有提到添加图标图片之类，但在与ComboBox相似的菜单控件MenuFlyout则可以添加icons。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Windows的控件的设计风格类似于 MateriaDesign，扁平化，多留白，线条简单，配色统一。然而MicrosoftStore中的应用总是不尽人意，有些甚至是简陋。还需要相关开发者的努力哇，其实这种风格还是很好看的。<br>在学习过程中，感觉使用C#做可视化编程其实和用Qt Creator 非常相似，都可以先通过拖拽控件设计界面，然后再补充代码完善相应的event。但是使用Qt时往往是为了给用Cpp写的课设加界面，经常会出现不兼容、字符串乱码的情况。这次直接学习C#应该会好很多。但是总而言之二者都比JAVA写界面要方便的多。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://g1ntoki0522.github.io/2018/03/19/Hello-World-0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -403,7 +534,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-count">2</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -416,7 +547,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-count">2</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>
