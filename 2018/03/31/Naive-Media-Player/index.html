@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="uvp," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="简单实现了一个Naive Media Player两次。为什么是两次呢，因为在第一次写完同步到github上时，手抖删除了对分支的更改。怒删重写后被dalao告知可以恢复呀QAQ。得到惨痛教训珍爱生命，远离手抖；珍爱生命，学好git。重写完后觉得第二次画的背景图更interesting，就换了几张截图，故几张图细节可能有变动。打开首页如下可点击右上角选择打开文件播放视频效果如下播放音频效果如下，会">
+<meta name="keywords" content="uvp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Naive Media Player">
+<meta property="og:url" content="https://g1ntoki0522.github.io/2018/03/31/Naive-Media-Player/index.html">
+<meta property="og:site_name" content="G1NTOKI">
+<meta property="og:description" content="简单实现了一个Naive Media Player两次。为什么是两次呢，因为在第一次写完同步到github上时，手抖删除了对分支的更改。怒删重写后被dalao告知可以恢复呀QAQ。得到惨痛教训珍爱生命，远离手抖；珍爱生命，学好git。重写完后觉得第二次画的背景图更interesting，就换了几张截图，故几张图细节可能有变动。打开首页如下可点击右上角选择打开文件播放视频效果如下播放音频效果如下，会">
+<meta property="og:image" content="https://g1ntoki0522.github.io/images/example00.png">
+<meta property="og:image" content="https://g1ntoki0522.github.io/images/example01.png">
+<meta property="og:image" content="https://g1ntoki0522.github.io/images/example02.png">
+<meta property="og:image" content="https://g1ntoki0522.github.io/images/example03.png">
+<meta property="og:updated_time" content="2018-03-31T18:44:19.570Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Naive Media Player">
+<meta name="twitter:description" content="简单实现了一个Naive Media Player两次。为什么是两次呢，因为在第一次写完同步到github上时，手抖删除了对分支的更改。怒删重写后被dalao告知可以恢复呀QAQ。得到惨痛教训珍爱生命，远离手抖；珍爱生命，学好git。重写完后觉得第二次画的背景图更interesting，就换了几张截图，故几张图细节可能有变动。打开首页如下可点击右上角选择打开文件播放视频效果如下播放音频效果如下，会">
+<meta name="twitter:image" content="https://g1ntoki0522.github.io/images/example00.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://g1ntoki0522.github.io/2018/03/31/Naive-Media-Player/"/>
+
+
+
+
+
+  <title>Naive Media Player | G1NTOKI</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">G1NTOKI</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://g1ntoki0522.github.io/2018/03/31/Naive-Media-Player/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="G1NTOKI">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/sidebarAvatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="G1NTOKI">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Naive Media Player</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-31T22:25:11+08:00">
+                2018-03-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>简单实现了一个<a href="https://github.com/G1NTOKI0522/UWP" target="_blank" rel="external">Naive Media Player</a>两次。<br>为什么是两次呢，因为在第一次写完同步到github上时，手抖删除了对分支的更改。怒删重写后被dalao告知可以恢复呀QAQ。<br>得到惨痛教训<code>珍爱生命，远离手抖；珍爱生命，学好git</code>。重写完后觉得第二次画的背景图更interesting，就换了几张截图，故几张图细节可能有变动。<br>打开首页如下<br><img src="/images/example00.png" alt="open"><br>可点击右上角选择打开文件<br><img src="/images/example01.png" alt="openfiles"><br>播放视频效果如下<br><img src="/images/example02.png" alt="video"><br>播放音频效果如下，会直接显示背景<br><img src="/images/example03.png" alt="audio"><br>以下是在实现过程中考虑到的和遇到的问题</p>
+<h2 id="播放视频、音频"><a href="#播放视频、音频" class="headerlink" title="播放视频、音频"></a>播放视频、音频</h2><p>首先想到的问题就是如何播放视频和音频。刚开始参考了XAML Controls Gallery，其中的介绍 和演示都非常简单。我尝试使用以下代码却发现并不能播放视频。<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">MediaPlayerElement</span> <span class="attr">Source</span>=<span class="string">"/Assets/test.mp4"</span></span></div><div class="line">					<span class="attr">MaxWidth</span>=<span class="string">"400"</span></div><div class="line">					<span class="attr">AutoPlay</span>=<span class="string">"False"</span></div><div class="line">					<span class="attr">AreTransportControlsEnabled</span>=<span class="string">"True"</span> /&gt;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>VS会报出两个错误，一个是当前平台支持的最低版本不支持 MediaPlayerElement，二是Convert不能直接将String转换为Source。第一个问题可以通过修改 调试-属性-应用程序 中修改最低版本来解决。<br>第二个问题大概意思就是不能通过String类型的文件路径转换为Source了类型的。所以我又参考了MS官方文档中<a href="https://docs.microsoft.com/en-us/windows/uwp/audio-video-camera/play-audio-and-video-with-mediaplayer#play-a-media-file-with-mediaplayer" target="_blank" rel="external">Play a media file with MediaPlayer</a><br>与<a href="https://docs.microsoft.com/en-us/windows/uwp/audio-video-camera/play-audio-and-video-with-mediaplayer#use-mediaplayerelement-to-render-video-in-xaml" target="_blank" rel="external">Use MediaPlayerElement to render video in XAML</a><br>大概理解了如何使用这两个控件。即在XAML中放置控件MediaPlayerElement，但不在XAML中设置该控件的source之类的属性，只设置与界面有关的；在.cs文件中声明 MediaPlayer，并在.cs中设置其source，然后将XAML中的PlayerElement的播放器绑定为.cs中的MediaPlayer。<br>的确这样写更好，在XAML文件中设置布局与控件，在.cs中写逻辑。代码如下：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">MediaPlayerElement</span> <span class="attr">x:Name</span>=<span class="string">"mediaSimple"</span> </span></div><div class="line">			<span class="attr">AutoPlay</span>=<span class="string">"False"</span></div><div class="line">			<span class="attr">AreTransportControlsEnabled</span>=<span class="string">"True"</span></div><div class="line">			<span class="attr">IsEnabled</span>=<span class="string">"True"</span></div><div class="line">			<span class="attr">Grid.Row</span>=<span class="string">"1"</span> </div><div class="line">			/&gt;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">MediaPlayer myPlayer = new MediaPlayer();</div><div class="line">myPlayer.Source = MediaSource.CreateFromUri(new Uri(&quot;ms-appx:///Assets/test.mp4&quot;));</div><div class="line">mediaSimple.setMediaPlayer(myPlayer);</div></pre></td></tr></table></figure>
+<p>然而仍然无法播放QAQ！在小方的帮助下，解决了这个问题。因为用的test.mp4文件放在了Assets文件夹下但是并没有在VS中吧该文件添加到项目里。在解决方案资源管理器中右键-添加-已有项目，选择test.mp4。</p>
+<h2 id="选择文件"><a href="#选择文件" class="headerlink" title="选择文件"></a>选择文件</h2><h3 id="选择文件按钮"><a href="#选择文件按钮" class="headerlink" title="选择文件按钮"></a>选择文件按钮</h3><p>界面需要一个按钮来选择文件，这里选择了在第一行添加CommandBar，CommandBar的content来显示打开的文件名，AppButton来选择要打开的文件。参考了文档<a href="https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/app-bars" target="_blank" rel="external">Command Bar</a><br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">CommandBar</span> <span class="attr">DefaultLabelPosition</span>=<span class="string">"Right"</span> <span class="attr">IsOpen</span>=<span class="string">"False"</span> <span class="attr">Grid.Row</span>=<span class="string">"0"</span>&gt;</span></div><div class="line">               <span class="tag">&lt;<span class="name">CommandBar.Content</span>&gt;</span></div><div class="line">                   <span class="tag">&lt;<span class="name">TextBlock</span>  <span class="attr">Name</span>=<span class="string">"Title"</span> <span class="attr">FontSize</span>=<span class="string">"24"</span> <span class="attr">Margin</span>=<span class="string">"12,14"</span>/&gt;</span></div><div class="line">               <span class="tag">&lt;/<span class="name">CommandBar.Content</span>&gt;</span></div><div class="line">               <span class="tag">&lt;<span class="name">AppBarButton</span> <span class="attr">Icon</span>=<span class="string">"OpenFile"</span> <span class="attr">Label</span>=<span class="string">"openFile"</span> <span class="attr">Click</span>=<span class="string">"AppBarButton_Click"</span> /&gt;</span></div><div class="line">           <span class="tag">&lt;/<span class="name">CommandBar</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>但是发现有一个问题就是在CommandBar的右边总是显示[···]的More 按钮，于是又看了一下文档，发现CommandBar有<a href="https://docs.microsoft.com/en-us/uwp/api/Windows.UI.Xaml.Controls.CommandBar#Windows_UI_Xaml_Controls_CommandBar_OverflowButtonVisibility" target="_blank" rel="external">OverflowButtonVisibility</a>属性，<br>修改为隐藏即可。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;CommandBar DefaultLabelPosition=&quot;Right&quot; IsOpen=&quot;False&quot; OverflowButtonVisibility=&quot;Collapsed&quot; Grid.Row=&quot;0&quot;&gt;</div></pre></td></tr></table></figure></p>
+<h3 id="选择本地文件"><a href="#选择本地文件" class="headerlink" title="选择本地文件"></a>选择本地文件</h3><p>仍然参考官方文档<a href="https://docs.microsoft.com/en-us/windows/uwp/files/quickstart-using-file-and-folder-pickers" target="_blank" rel="external">Open files and folders with a picker</a>写出如下代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"> private void AppBarButton_Click(object sender, RoutedEventArgs e)</div><div class="line">&#123;</div><div class="line">	var picker = new Windows.Storage.Pickers.FileOpenPicker();</div><div class="line">	picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail;</div><div class="line">	picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.PicturesLibrary;</div><div class="line">	picker.FileTypeFilter.Add(&quot;.mp3&quot;);</div><div class="line">	picker.FileTypeFilter.Add(&quot;.mp4&quot;);</div><div class="line"></div><div class="line">	Windows.Storage.StorageFile file = await picker.PickSingleFileAsync();</div><div class="line">	if (file != null)</div><div class="line">	&#123;</div><div class="line">		// Application now has read/write access to the picked file</div><div class="line">		this.textBlock.Text = &quot;Picked photo: &quot; + file.Name;</div><div class="line">	&#125;</div><div class="line">	else</div><div class="line">	&#123;</div><div class="line">		this.textBlock.Text = &quot;Operation cancelled.&quot;;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>然而多处报错，在根据VS的提示修改之后，错误更加严重了，AppBarButton_Click方法返回值类型不匹配。于是又借助搜索引擎，找到一篇<a href="https://blog.csdn.net/linwh8/article/details/70314698" target="_blank" rel="external">blog</a>参考它写出如下代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">private async void add_Click(object sender, RoutedEventArgs e)</div><div class="line">       &#123;</div><div class="line">           var openPicker = new FileOpenPicker();</div><div class="line"></div><div class="line">           openPicker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.VideosLibrary;</div><div class="line">           openPicker.FileTypeFilter.Add(&quot;.mp4&quot;);</div><div class="line">           openPicker.FileTypeFilter.Add(&quot;.mp3&quot;);</div><div class="line"></div><div class="line">           StorageFile file = await openPicker.PickSingleFileAsync();</div><div class="line">           if (file != null)</div><div class="line">           &#123;</div><div class="line">               var mediaSource = MediaSource.CreateFromStorageFile(file);</div><div class="line">               Title.Text = file.Name;</div><div class="line">               myPlayer.Source = mediaSource;</div><div class="line">               mediaSimple.SetMediaPlayer(myPlayer);</div><div class="line">               if (file.FileType == &quot;.mp3&quot;)</div><div class="line">               &#123;</div><div class="line">                   //Todo 播放音频时显示专辑封面旋转</div><div class="line">                   //可通过 Ellipse 实现</div><div class="line">               &#125;</div><div class="line">           &#125;</div><div class="line"></div><div class="line">       &#125;</div></pre></td></tr></table></figure></p>
+<p>乍看没什么区别，为什么第一次就报错呢？仔细对比发现，第一次的代码在根据VS提示自动修改后会变成：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">private async System.Threading.Tasks.Task AppBarButton_ClickAsync(object sender, RoutedEventArgs e)</div></pre></td></tr></table></figure></p>
+<p>将返回值类型修改成了task，这也就是为什么报错是返回值类型不匹配。这里其实之前嗨翻了一个错误，就是没有写 <code>mediaSimple.setMediaPlayer(myPlayer);</code>这句，导致打开文件之后一直啥也没有。<br>通过 <code>myPlayer.play();</code> 测试出已经正常打开文件了，这才找出是因为没有和XAML的控件绑定导致的。</p>
+<h2 id="界面"><a href="#界面" class="headerlink" title="界面"></a>界面</h2><p>打开应用和播放音频时直接显示白色界面，看起来有些简陋。参考<a href="https://blog.csdn.net/linwh8/article/details/70314698" target="_blank" rel="external">blog</a><br>给Grid添加Image来简单装饰，于是打开画图板绘制了一张切合标题的背景图。<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">Grid.Background</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">ImageBrush</span> <span class="attr">ImageSource</span>=<span class="string">"Assets/pic.png"</span> <span class="attr">Opacity</span>=<span class="string">"0.9"</span> /&gt;</span></div><div class="line">            <span class="tag">&lt;/<span class="name">Grid.Background</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>出现问题时要认真看报错啊，FileOpenPicker那个错误报错已经很明显了。<br>官方文档才是最全面最可靠的。<br>最后希望写代码的时候能头脑清醒，少犯智障的错误，尤其是写完了却误删代码这种，可长点心吧。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/uvp/" rel="tag"># uvp</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/26/KnowMyWeapons-Part2/" rel="next" title="KnowMyWeapons Part2">
+                <i class="fa fa-chevron-left"></i> KnowMyWeapons Part2
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNDk3MC8xMTUwNw=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/sidebarAvatar.jpg"
+                alt="G1NTOKI" />
+            
+              <p class="site-author-name" itemprop="name">G1NTOKI</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#播放视频、音频"><span class="nav-number">1.</span> <span class="nav-text">播放视频、音频</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#选择文件"><span class="nav-number">2.</span> <span class="nav-text">选择文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#选择文件按钮"><span class="nav-number">2.1.</span> <span class="nav-text">选择文件按钮</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#选择本地文件"><span class="nav-number">2.2.</span> <span class="nav-text">选择本地文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#界面"><span class="nav-number">3.</span> <span class="nav-text">界面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">G1NTOKI</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
