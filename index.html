@@ -238,6 +238,140 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://g1ntoki0522.github.io/2018/04/12/NaiveMediaPlayer2-0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="G1NTOKI">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/sidebarAvatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="G1NTOKI">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/04/12/NaiveMediaPlayer2-0/" itemprop="url">NaiveMediaPlayer2.0</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-12T23:05:51+08:00">
+                2018-04-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>在之前的基础上添加两个功能，一个是从URL源直接播放文件，另一个是先缓存在系统音乐文件夹下然后再播放。<br>经历一番波折之后完成了<a href="https://github.com/G1NTOKI0522/UWP" target="_blank" rel="external">NaiveMediaPlayer2.0</a>。打开首界面如下<br><img src="/images/5-00.png" alt="mainpage"><br>在CommandBar添加了一个按钮，点击会出现二级界面<br><img src="/images/5-01.png" alt="secondaryPage"><br>在文本框中输入URL，点击<code>justPlay</code>按钮，播放器开始播放NEUSong并显示相应title,直接播放，所以本地音乐文件夹没有文件。<br><img src="/images/5-02.png" alt="justPlay"><br>点击cacheThenPlay按钮，稍等片刻，文件即会被下载到本地音乐文件夹，可在播放器开始播放。<br><img src="/images/5-03.png" alt="cache"></p>
+<h2 id="从URL源直接播放"><a href="#从URL源直接播放" class="headerlink" title="从URL源直接播放"></a>从URL源直接播放</h2><p>首先想到的就是能否直接从URL源播放文件。根据上次测试播放本地文件的经验，试着将本地的URI改为给定的URL，写出如下代码，尝试能否播放。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">var mediaSource = MediaSource.CreateFromUri(new Uri(&quot;http://www.neu.edu.cn/indexsource/neusong.mp3&quot;));</div><div class="line"></div><div class="line">Title.Text = mediaSource.Uri.ToString(); </div><div class="line">Title.Text = Title.Text.Substring(Title.Text.LastIndexOf(&apos;/&apos;) + 1);</div><div class="line">myPlayer.Source = mediaSource;</div><div class="line">mediaSimple.SetMediaPlayer(myPlayer);</div></pre></td></tr></table></figure></p>
+<p>运行可以直接播放。第一个功能完成。</p>
+<h2 id="创建新窗口"><a href="#创建新窗口" class="headerlink" title="创建新窗口"></a>创建新窗口</h2><p>然后开始想怎样设计交互方式来实现对两个功能的选择，类比于openFile时在新窗口选择文件，所以初步设想是点击playOnline按钮后，弹出新窗口。<br>在新窗口放一个<code>pivot</code>，有<code>justPlay</code>,<code>cacheThenPlay</code>两个item，做成类似于选项卡的效果。于是参考<a href="https://docs.microsoft.com/zh-cn/windows/uwp/layout/show-multiple-views" target="_blank" rel="external">微软文档 Multi-views </a>和一篇<a href="https://blog.csdn.net/wind_white/article/details/64442814" target="_blank" rel="external">blog</a>写出如下代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">private void AppBarButton_Click_1(object sender, RoutedEventArgs e)</div><div class="line">&#123;</div><div class="line">	CoreApplicationView newView = CoreApplication.CreateNewView();</div><div class="line">    int newViewId = 0;</div><div class="line">    await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =&gt;</div><div class="line">    &#123;</div><div class="line">         Frame frame = new Frame();</div><div class="line">         frame.Navigate(sourcePageType: typeof(SecondaryPage));</div><div class="line">         Window.Current.Content = frame;</div><div class="line">         // You have to activate the window in order to show it later.</div><div class="line">         Window.Current.Activate();</div><div class="line"></div><div class="line">         newViewId = ApplicationView.GetForCurrentView().Id;</div><div class="line">    &#125;);</div><div class="line">    bool viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>多窗口就是在多个view之间切换，将新Page通过Window.Current.Activate()设为active状态。至此已经可以通过点击按钮弹出新窗口了。在新的页面设置布局，参考<a href="https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/tabs-pivot" target="_blank" rel="external">微软 Pivot 文档</a>写出如下代码<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">Page</span></span></div><div class="line">    <span class="attr">x:Class</span>=<span class="string">"NaiveMediaPlayer.SecondaryPage"</span></div><div class="line">    <span class="attr">xmlns</span>=<span class="string">"http://schemas.microsoft.com/winfx/2006/xaml/presentation"</span></div><div class="line">    <span class="attr">xmlns:x</span>=<span class="string">"http://schemas.microsoft.com/winfx/2006/xaml"</span></div><div class="line">    <span class="attr">xmlns:local</span>=<span class="string">"using:NaiveMediaPlayer"</span></div><div class="line">    <span class="attr">xmlns:d</span>=<span class="string">"http://schemas.microsoft.com/expression/blend/2008"</span></div><div class="line">    <span class="attr">xmlns:mc</span>=<span class="string">"http://schemas.openxmlformats.org/markup-compatibility/2006"</span></div><div class="line">    <span class="attr">mc:Ignorable</span>=<span class="string">"d"</span>&gt;</div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">Grid</span> <span class="attr">Background</span>=<span class="string">"&#123;ThemeResource ApplicationPageBackgroundThemeBrush&#125;"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">Pivot</span> <span class="attr">Title</span>=<span class="string">"playOnlineSource"</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">PivotItem</span> <span class="attr">Header</span>=<span class="string">"JustPlay"</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">Grid</span>&gt;</span></div><div class="line">                    <span class="tag">&lt;<span class="name">Grid.RowDefinitions</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;<span class="name">RowDefinition</span> <span class="attr">Height</span>=<span class="string">"*"</span> /&gt;</span></div><div class="line">                        <span class="tag">&lt;<span class="name">RowDefinition</span> <span class="attr">Height</span>=<span class="string">"Auto"</span> /&gt;</span></div><div class="line">                        <span class="tag">&lt;<span class="name">RowDefinition</span> <span class="attr">Height</span>=<span class="string">"Auto"</span> /&gt;</span></div><div class="line">                        <span class="tag">&lt;<span class="name">RowDefinition</span> <span class="attr">Height</span>=<span class="string">"*"</span> /&gt;</span></div><div class="line">                    <span class="tag">&lt;/<span class="name">Grid.RowDefinitions</span>&gt;</span></div><div class="line">                    <span class="tag">&lt;<span class="name">TextBox</span> <span class="attr">Name</span>=<span class="string">"input1"</span> <span class="attr">Header</span>=<span class="string">"URL:"</span> <span class="attr">PlaceholderText</span>=<span class="string">"http://..."</span> <span class="attr">Grid.Row</span>=<span class="string">"1"</span>/&gt;</span></div><div class="line">                    <span class="tag">&lt;<span class="name">StackPanel</span> <span class="attr">Grid.Row</span>=<span class="string">"2"</span> <span class="attr">Orientation</span>=<span class="string">"Horizontal"</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;<span class="name">Button</span> <span class="attr">Content</span>=<span class="string">"OK"</span> <span class="attr">Click</span> =<span class="string">"Button_Click_1"</span>  <span class="attr">Margin</span>=<span class="string">"50"</span>/&gt;</span></div><div class="line">                        <span class="tag">&lt;<span class="name">Button</span> <span class="attr">Content</span>=<span class="string">"Cancel"</span> <span class="attr">Click</span> =<span class="string">"Button_Click_2"</span>  <span class="attr">Margin</span>=<span class="string">"50"</span>/&gt;</span></div><div class="line">                    <span class="tag">&lt;/<span class="name">StackPanel</span>&gt;</span></div><div class="line">                   </div><div class="line">                <span class="tag">&lt;/<span class="name">Grid</span>&gt;</span></div><div class="line">            <span class="tag">&lt;/<span class="name">PivotItem</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">PivotItem</span> <span class="attr">Header</span>=<span class="string">"CacheThenPlay"</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">Grid</span>&gt;</span></div><div class="line">                    <span class="tag">&lt;<span class="name">Grid.RowDefinitions</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;<span class="name">RowDefinition</span> <span class="attr">Height</span>=<span class="string">"*"</span> /&gt;</span></div><div class="line">                        <span class="tag">&lt;<span class="name">RowDefinition</span> <span class="attr">Height</span>=<span class="string">"Auto"</span> /&gt;</span></div><div class="line">                        <span class="tag">&lt;<span class="name">RowDefinition</span> <span class="attr">Height</span>=<span class="string">"Auto"</span> /&gt;</span></div><div class="line">                        <span class="tag">&lt;<span class="name">RowDefinition</span> <span class="attr">Height</span>=<span class="string">"*"</span> /&gt;</span></div><div class="line">                    <span class="tag">&lt;/<span class="name">Grid.RowDefinitions</span>&gt;</span></div><div class="line">                    <span class="tag">&lt;<span class="name">TextBox</span> <span class="attr">Name</span> =<span class="string">"input2"</span> <span class="attr">Header</span>=<span class="string">"URL:"</span> <span class="attr">PlaceholderText</span>=<span class="string">"http://..."</span> <span class="attr">Grid.Row</span>=<span class="string">"1"</span>/&gt;</span></div><div class="line">                    <span class="tag">&lt;<span class="name">StackPanel</span> <span class="attr">Grid.Row</span>=<span class="string">"2"</span> <span class="attr">Orientation</span>=<span class="string">"Horizontal"</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;<span class="name">Button</span> <span class="attr">Content</span>=<span class="string">"OK"</span> <span class="attr">Click</span> =<span class="string">"Button_Click_3"</span>  <span class="attr">Margin</span>=<span class="string">"50"</span>/&gt;</span></div><div class="line">                        <span class="tag">&lt;<span class="name">Button</span> <span class="attr">Content</span>=<span class="string">"Cancel"</span> <span class="attr">Click</span> =<span class="string">"Button_Click_4"</span>  <span class="attr">Margin</span>=<span class="string">"50"</span>/&gt;</span></div><div class="line">                    <span class="tag">&lt;/<span class="name">StackPanel</span>&gt;</span></div><div class="line">                <span class="tag">&lt;/<span class="name">Grid</span>&gt;</span></div><div class="line">            <span class="tag">&lt;/<span class="name">PivotItem</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">Pivot</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">Grid</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">Page</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>每个pivot item 都有一个Textbox来输入URL，下方是两个按钮<code>OK</code>, <code>Cancel</code>。点击取消按钮时应该将新的窗口关闭，写这个事件时完全找不到参考的资料啥的，最后还是类比着<code>Window.Current.Activate()</code>，挨着看Window的方法列表。终于找到它！<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">private void Button_Click_2(object sender, RoutedEventArgs e)</div><div class="line">&#123;</div><div class="line">    Window.Current.Close();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>然后在写OK按钮的时候，发现自己深陷传值的大坑无法自拔。参考各种博客尝试了传参<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">frame.Navigate(sourcePageType: typeof(SecondaryPage),Parameter: mediaPlayer);</div></pre></td></tr></table></figure></p>
+<p>但是不行，新page就是没有这个变量。又尝试声明全局变量，是避免传参的问题了，但是在一开始就把MediaPlayerElement和空Source的MediaPlayer绑定了，之后再修改Source仍然不能播放。</p>
+<p>这个问题，第二天决定换个交互方式来解决，不用新窗口，直接弹一个spliteView来搞。将两个功能变成两个按钮，同样是二选一的逻辑。<br>在MainPage.xaml中添加如下代码：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">SplitView</span> <span class="attr">IsPaneOpen</span>=<span class="string">"False"</span></span></div><div class="line">                         <span class="attr">DisplayMode</span>=<span class="string">"Inline"</span></div><div class="line">                       <span class="attr">PanePlacement</span>=<span class="string">"Right"</span></div><div class="line">                         <span class="attr">OpenPaneLength</span>=<span class="string">"400"</span> <span class="attr">Name</span>=<span class="string">"choice"</span> <span class="attr">Grid.Row</span>=<span class="string">"1"</span> &gt;</div><div class="line">                <span class="tag">&lt;<span class="name">SplitView.Pane</span>&gt;</span></div><div class="line">                    <span class="tag">&lt;<span class="name">Grid</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;<span class="name">Grid.ColumnDefinitions</span>&gt;</span></div><div class="line">                            <span class="tag">&lt;<span class="name">ColumnDefinition</span> <span class="attr">Width</span>=<span class="string">"auto"</span>/&gt;</span></div><div class="line">                            <span class="tag">&lt;<span class="name">ColumnDefinition</span> <span class="attr">Width</span>=<span class="string">"auto"</span>/&gt;</span></div><div class="line">                        <span class="tag">&lt;/<span class="name">Grid.ColumnDefinitions</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;<span class="name">Grid.RowDefinitions</span>&gt;</span></div><div class="line">                            <span class="tag">&lt;<span class="name">RowDefinition</span> <span class="attr">Height</span>=<span class="string">"*"</span>/&gt;</span></div><div class="line">                            <span class="tag">&lt;<span class="name">RowDefinition</span> <span class="attr">Height</span>=<span class="string">"auto"</span>/&gt;</span></div><div class="line">                            <span class="tag">&lt;<span class="name">RowDefinition</span> <span class="attr">Height</span>=<span class="string">"auto"</span> /&gt;</span></div><div class="line">                            <span class="tag">&lt;<span class="name">RowDefinition</span> <span class="attr">Height</span>=<span class="string">"*"</span>/&gt;</span></div><div class="line">                        <span class="tag">&lt;/<span class="name">Grid.RowDefinitions</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;<span class="name">TextBox</span> <span class="attr">Name</span> =<span class="string">"inputUrl"</span> <span class="attr">Header</span>=<span class="string">"URL:"</span> <span class="attr">PlaceholderText</span>=<span class="string">"http://..."</span> <span class="attr">Grid.Row</span>=<span class="string">"1"</span> <span class="attr">Grid.ColumnSpan</span>=<span class="string">"2"</span></span></div><div class="line">                                 <span class="attr">Width</span> =<span class="string">"268"</span></div><div class="line">                                 <span class="attr">VerticalAlignment</span>=<span class="string">"Center"</span> <span class="attr">HorizontalAlignment</span>=<span class="string">"Center"</span>/&gt;</div><div class="line">                        <span class="tag">&lt;<span class="name">Button</span> <span class="attr">Content</span>=<span class="string">"justPlay"</span> <span class="attr">Click</span> =<span class="string">"Button_Click"</span>  <span class="attr">Margin</span>=<span class="string">"50"</span> <span class="attr">Grid.Row</span>=<span class="string">"2"</span> <span class="attr">Grid.Column</span>=<span class="string">"0"</span>/&gt;</span></div><div class="line">                        <span class="tag">&lt;<span class="name">Button</span> <span class="attr">Content</span>=<span class="string">"cacheThenPlay"</span> <span class="attr">Click</span> =<span class="string">"Button_Click_1"</span>  <span class="attr">Margin</span>=<span class="string">"50"</span> <span class="attr">Grid.Row</span>=<span class="string">"2"</span> <span class="attr">Grid.Column</span>=<span class="string">"1"</span>/&gt;</span></div><div class="line">                    <span class="tag">&lt;/<span class="name">Grid</span>&gt;</span></div><div class="line"></div><div class="line">                    </div><div class="line">                <span class="tag">&lt;/<span class="name">SplitView.Pane</span>&gt;</span></div><div class="line"></div><div class="line">            <span class="tag">&lt;/<span class="name">SplitView</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>仍然不明白，讲道理Window和page用的都是一个navigate 方法，page间直接传参就行，怎么这个window就不可以吶。可能是当时写的有问题。不过这里传参只能传一个，还是不能实现之前设想的效果。还是换spliteView吧。</p>
+<h2 id="缓存文件"><a href="#缓存文件" class="headerlink" title="缓存文件"></a>缓存文件</h2><p>缓存文件就是读写文件，通过参看<a href="https://docs.microsoft.com/en-us/windows/uwp/files/quickstart-reading-and-writing-files" target="_blank" rel="external">微软 Create, write, and read a file 文档</a>，需要先new 一个 folder，然后调用folder的方法在其路径下新建文件。<br>又参考<a href="https://docs.microsoft.com/en-us/windows/uwp/files/quickstart-managing-folders-in-the-music-pictures-and-videos-libraries" target="_blank" rel="external">微软 Files and folders in the Music, Pictures, and Videos libraries 文档</a>得知可用如下代码获得Folder：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">var myPictures = await Windows.Storage.StorageLibrary.GetLibraryAsync(Windows.Storage.KnownLibraryId.Pictures);</div></pre></td></tr></table></figure></p>
+<p>写出如下代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">private async void Button_Click_1(object sender, RoutedEventArgs e)</div><div class="line">&#123;</div><div class="line">	choice.IsPaneOpen = false;</div><div class="line">    String inputU = inputUrl.Text.ToString();</div><div class="line">    if (inputU == &quot;&quot;) return;</div><div class="line">    var myfolder = KnownFolders.MusicLibrary;</div><div class="line">	String fileName = inputU.Substring(inputU.LastIndexOf(&apos;/&apos;) + 1);</div><div class="line">    StorageFile cacheFile = await myfolder.CreateFileAsync(fileName,CreationCollisionOption.ReplaceExisting);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>但是只有这样是不行的，又参考这篇<a href="https://blog.csdn.net/lindexi_gd/article/details/49007841" target="_blank" rel="external">blog</a>了解到，想要使用系统文件夹，需要设置<code>应用程序</code>-<code>包清单</code>-勾选<code>音乐库</code>。解决权限不够的问题。<br>创建文件之后怎么将URL源的文件写入创建的文件呢？研究了好大会儿写文件，但是没有从URL源直接写的。然后尝试直接从URL源创建文件，也没啥资料，就是各种试StorageFile的方法列表里带Uri的方法。找到一个<code>StorageFile.CreateStreamedFileFromUriAsync()</code>的方法，然鹅直接用会抛异常。<br>然后就又搜索这个方法的资料，然后！非常意外的在Stack Overflow找到了另一种解决方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">StorageFolder fileFolder = await ApplicationData.Current.LocalFolder.GetFolderAsync(&quot;MyFiles&quot;);</div><div class="line">StorageFile file =await fileFolder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);</div><div class="line"></div><div class="line">var download = new BackgroundDownloader().CreateDownload(source, file);</div><div class="line">await download.StartAsync();</div></pre></td></tr></table></figure></p>
+<p>从源直接下载到目标文件，非常nice。写出如下代码解决了第二个功能：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">private async void Button_Click_1(object sender, RoutedEventArgs e)</div><div class="line">        &#123;</div><div class="line">            choice.IsPaneOpen = false;</div><div class="line">            String inputU = inputUrl.Text.ToString();</div><div class="line">            if (inputU == &quot;&quot;) return;</div><div class="line">            var myfolder = KnownFolders.MusicLibrary;</div><div class="line">            String fileName = inputU.Substring(inputU.LastIndexOf(&apos;/&apos;) + 1);</div><div class="line">            StorageFile cacheFile = await myfolder.CreateFileAsync(fileName,CreationCollisionOption.ReplaceExisting);</div><div class="line">           </div><div class="line">            var download = new BackgroundDownloader().CreateDownload(new Uri(inputU), cacheFile);</div><div class="line">            await download.StartAsync();</div><div class="line"></div><div class="line">            var cacheMediaSource = MediaSource.CreateFromStorageFile(cacheFile);</div><div class="line">            myPlayer.Source = cacheMediaSource;</div><div class="line">            mediaSimple.SetMediaPlayer(myPlayer);</div><div class="line">            Title.Text = fileName;</div><div class="line">        &#125;</div></pre></td></tr></table></figure></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>出现错误时还是要认真研究报错信息哇，这样才能更快解决问题；<br>回看代码感觉犯了老师第一节课说的错误，一个button为什么要知道怎么获取json哇。同样这里一个button为什么要知道怎么从URL下载文件，怎么创建文件，设置播放器哇。没有好好封装起来。敲代码的时候只是简单的想着实现功能就好，没有考虑代码的结构啥的。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://g1ntoki0522.github.io/2018/04/09/The-Plan-of-Our-Final-Project-IPV6-TV-Player/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -994,7 +1128,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
