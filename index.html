@@ -238,6 +238,173 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://g1ntoki0522.github.io/2018/05/12/NEUTV-第二周开发日记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="G1NTOKI">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/sidebarAvatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="G1NTOKI">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/12/NEUTV-第二周开发日记/" itemprop="url">NEUTV 第二周开发日记</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-12T16:28:40+08:00">
+                2018-05-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><a href="https://github.com/xfangfang/NEUTV_UWP" target="_blank" rel="external">NEUTV项目</a></p>
+<h1 id="方悦成"><a href="#方悦成" class="headerlink" title="方悦成"></a>方悦成</h1><h2 id="主要工作"><a href="#主要工作" class="headerlink" title="主要工作"></a>主要工作</h2><p>添加下载功能，完善弹幕</p>
+<h2 id="提交日志"><a href="#提交日志" class="headerlink" title="提交日志"></a>提交日志</h2><h3 id="2018-5-4"><a href="#2018-5-4" class="headerlink" title="2018/5/4"></a>2018/5/4</h3><ul>
+<li>修改视频下载部分的代码结构，新建了downloadManager类进行下载处理</li>
+</ul>
+<h1 id="李书缘"><a href="#李书缘" class="headerlink" title="李书缘"></a>李书缘</h1><h2 id="主要工作-1"><a href="#主要工作-1" class="headerlink" title="主要工作"></a>主要工作</h2><p>完成弹幕功能</p>
+<h2 id="提交日志-1"><a href="#提交日志-1" class="headerlink" title="提交日志"></a>提交日志</h2><p>p.s.提交中的下载功能是小方完成的，收藏功能是邓翼完成的。</p>
+<h3 id="2018-05-05"><a href="#2018-05-05" class="headerlink" title="2018/05/05"></a>2018/05/05</h3><ul>
+<li>完善下载进度显示，添加了收藏功能</li>
+<li>修改弹幕添加位置，下载功能</li>
+<li>完成连接服务器，完成直播功能</li>
+<li>根据播放位置实时添加弹幕</li>
+<li>监听当前播放位置来添加弹幕</li>
+<li>添加弹幕开关，直播，下载按钮</li>
+</ul>
+<h3 id="2018-05-04"><a href="#2018-05-04" class="headerlink" title="2018/05/04"></a>2018/05/04</h3><ul>
+<li>尝试连接服务器 格式错误</li>
+<li>添加弹幕的播放和暂停</li>
+</ul>
+<h3 id="2018-05-03"><a href="#2018-05-03" class="headerlink" title="2018/05/03"></a>2018/05/03</h3><ul>
+<li>添加弹幕及全屏功能</li>
+</ul>
+<h1 id="张代锟"><a href="#张代锟" class="headerlink" title="张代锟"></a>张代锟</h1><h2 id="主要工作-2"><a href="#主要工作-2" class="headerlink" title="主要工作"></a>主要工作</h2><p>主要工作是服务器端的开发</p>
+<ul>
+<li>运用python和web.py框架搭建的简易服务器端</li>
+<li>修正了一些返回模板文件的格式错误</li>
+<li>将xml文件转化为C#对象</li>
+<li>修正弹幕类型错误</li>
+<li>部署服务器端代码于Ubuntu16.04的主机中，并修改一些bug</li>
+</ul>
+<h2 id="提交日志-2"><a href="#提交日志-2" class="headerlink" title="提交日志"></a>提交日志</h2><h3 id="2018-05-03-1"><a href="#2018-05-03-1" class="headerlink" title="2018/05/03"></a>2018/05/03</h3><ul>
+<li>将服务端代码部署在Ubuntu主机上</li>
+</ul>
+<h3 id="2018-05-04-1"><a href="#2018-05-04-1" class="headerlink" title="2018/05/04"></a>2018/05/04</h3><ul>
+<li>add xml translator without testing: 增加一个转换函数，将服务端发送过来的xml文件转化为Danmaku对象的列表, 但是没有通过测试</li>
+<li>fix the format problem: 修正xml格式错误</li>
+<li>merge the media branch: 合并弹幕媒体播放器分支</li>
+</ul>
+<h3 id="2018-05-05-1"><a href="#2018-05-05-1" class="headerlink" title="2018/05/05"></a>2018/05/05</h3><ul>
+<li>fix the bug that lead to the type err for danmakulist generation: 修正了使得弹幕列表生成格式错误的bug</li>
+<li>merge the remote repo: 更新自己的分支</li>
+</ul>
+<h1 id="邓翼"><a href="#邓翼" class="headerlink" title="邓翼"></a>邓翼</h1><h2 id="主要工作-3"><a href="#主要工作-3" class="headerlink" title="主要工作"></a>主要工作</h2><p>收藏功能</p>
+<h2 id="提交日志-3"><a href="#提交日志-3" class="headerlink" title="提交日志"></a>提交日志</h2><p>p.s.当时由于网络原因，通过李书缘的github账号提交了收藏功能。<br>p.p.s 再次由于网络原因，小方用邓翼账号提交了他的更改。</p>
+<h3 id="2018-05-05-2"><a href="#2018-05-05-2" class="headerlink" title="2018/05/05"></a>2018/05/05</h3><ul>
+<li>桌面图标居中&amp;修复弹幕服务器不存在时不可回看的bug</li>
+</ul>
+<h1 id="提交截图"><a href="#提交截图" class="headerlink" title="提交截图"></a>提交截图</h1><p><img src="/images/6-0.png" alt="ScreenShot"></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://g1ntoki0522.github.io/2018/04/27/NEUTV-第一周开发日记/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1314,7 +1481,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
